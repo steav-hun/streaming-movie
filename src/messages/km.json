@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "ទំព័រដើម",
+    "movies": "ភាពយន្ត",
+    "tvShows": "កម្មវិធីទូរទស្សន៍",
+    "search": "ស្វែងរក",
+    "watchlist": "បញ្ជីមើល",
+    "login": "ចូលគណនី"
+  },
+  "home": {
+    "trending": "កំពុងពេញនិយម",
+    "popular": "ភាពយន្តល្បីល្បាញ",
+    "newRelease": "ចេញថ្មី",
+    "watchNow": "មើលឥឡូវ",
+    "addWatchlist": "បន្ថែមទៅបញ្ជី"
+  },
+  "search": {
+    "placeholder": "ស្វែងរកភាពយន្ត...",
+    "noResult": "រកមិនឃើញ"
+  },
+  "footer": {
+    "rights": "រក្សាសិទ្ធិគ្រប់យ៉ាង"
+  },
+  "movie": {
+    "trailerHeading": "មើលឃ្លីបផ្សព្វផ្សាយ",
+    "noTrailer": "គ្មានឃ្លីបនៅលើ TMDB សម្រាប់ភាពយន្តនេះទេ។",
+    "trailerNote": "ឃ្លីបមកពី TMDB (YouTube / Vimeo)។ ភាពយន្តពេញត្រូវការ streaming ដែលមានអាជ្ញាប័ណ្ណ។",
+    "unsupportedVideo": "ឃ្លីបនេះប្រើប្រភពដែលមិនអាច embed បាននៅទីនេះ។"
+  }
+}

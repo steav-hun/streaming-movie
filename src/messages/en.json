@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Home",
+    "movies": "Movies",
+    "tvShows": "TV Shows",
+    "search": "Search",
+    "watchlist": "Watchlist",
+    "login": "Login"
+  },
+  "home": {
+    "trending": "Trending Now",
+    "popular": "Popular Movies",
+    "newRelease": "New Releases",
+    "watchNow": "Watch Now",
+    "addWatchlist": "Add to Watchlist"
+  },
+  "search": {
+    "placeholder": "Search movies, TV shows...",
+    "noResult": "No results found"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  },
+  "movie": {
+    "trailerHeading": "Watch trailer",
+    "noTrailer": "No trailer video is listed for this title on TMDB.",
+    "trailerNote": "Trailers come from TMDB (YouTube / Vimeo). Full films require a licensed provider.",
+    "unsupportedVideo": "This trailer uses a host we cannot embed here; try TMDB or YouTube."
+  }
+}
