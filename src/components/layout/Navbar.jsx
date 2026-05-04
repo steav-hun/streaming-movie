@@ -45,7 +45,7 @@ export default function Navbar () {
 
         <Link href="/" className="text-brand-red font-bold text-2xl
           tracking-tight shrink-0">
-          MOVIESTREAM
+          MerlMovie24
         </Link>
 
         <ul className="hidden md:flex items-center gap-6">
