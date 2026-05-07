@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { HtmlLang } from '@/components/layout/HtmlLang'
+import { getSiteUrl } from '@/lib/site-url'
 
 const inter = Inter({ subsets: ['latin'] })
 const battambang = Battambang({
@@ -13,9 +14,39 @@ const battambang = Battambang({
   variable: '--font-khmer'
 })
 
-export const metadata = {
-  title: 'MovieStream',
-  description: 'Watch movies online'
+export async function generateMetadata ({ params }) {
+  const { locale } = await params
+  const siteName = 'MovieStream'
+  const description = 'Watch movies online'
+  const baseUrl = new URL(getSiteUrl())
+
+  return {
+    metadataBase: baseUrl,
+    title: {
+      default: siteName,
+      template: `%s | ${siteName}`
+    },
+    description,
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        en: '/en',
+        km: '/km'
+      }
+    },
+    openGraph: {
+      title: siteName,
+      description,
+      type: 'website',
+      siteName,
+      locale
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: siteName,
+      description
+    }
+  }
 }
 
 export function generateStaticParams () {
