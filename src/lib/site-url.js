@@ -5,6 +5,6 @@ export function getSiteUrl () {
   const vercel = process.env.VERCEL_URL
   if (vercel) return `https://${vercel.replace(/\/+$/, '')}`
 
-  return 'http://localhost:3000'
+  return 'https://merlmovie24.vercel.app/'
 }
 

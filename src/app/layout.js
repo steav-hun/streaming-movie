@@ -8,21 +8,21 @@ export const metadata = {
     default: 'MerlMovie24',
     template: '%s | MerlMovie24'
   },
-  description: 'Watch movies online',
+  description: 'MerlMovie24',
   applicationName: 'MerlMovie24',
   alternates: {
     canonical: '/'
   },
   openGraph: {
     title: 'MerlMovie24',
-    description: 'Watch movies online',
+    description: 'MerlMovie24',
     type: 'website',
     siteName: 'MerlMovie24'
   },
   twitter: {
     card: 'summary_large_image',
     title: 'MerlMovie24',
-    description: 'Watch movies online'
+    description: 'MerlMovie24'
   }
 }
 
