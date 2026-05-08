@@ -15,7 +15,10 @@ function getAccessToken () {
  * @see https://developer.themoviedb.org/reference/discover-movie
  */
 export function localeToTmdbLanguage (locale) {
-  if (locale === 'km') return 'km-KH'
+  // TMDB falls back to "original language" when a translation doesn't exist.
+  // For a Khmer UI, the expected fallback is English (not Thai/original),
+  // so we request English for all non-English locales.
+  if (locale === 'en') return 'en-US'
   return 'en-US'
 }
 

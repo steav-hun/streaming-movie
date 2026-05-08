@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
-import { Link, usePathname, getPathname } from '@/i18n/navigation'
+import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import { Search, Menu, X, Bell, User } from 'lucide-react'
 
 const navLinks = [
@@ -15,18 +15,18 @@ export default function Navbar () {
   const t = useTranslations('nav')
   const pathname = usePathname()
   const locale = useLocale()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
 
   function switchLocale (newLocale) {
     if (newLocale === locale) return
     const path = pathname ?? '/'
-    // Full navigation: client router + replace({ locale }) can fail to swap locale with Next 15/16.
-    const target = getPathname({ href: path, locale: newLocale })
-    const qs = typeof window !== 'undefined'
+    const suffix = typeof window !== 'undefined'
       ? `${window.location.search}${window.location.hash}`
       : ''
-    window.location.assign(`${target}${qs}`)
+    // next-intl wraps Next router: client navigation + locale cookie (no full page reload)
+    router.replace(`${path}${suffix}`, { locale: newLocale })
   }
 
   return (
