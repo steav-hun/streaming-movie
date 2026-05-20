@@ -63,14 +63,17 @@ export default function Navbar () {
         </span>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 min-w-0">
 
-        <Link href="/" className="text-brand-red font-bold text-2xl
-          tracking-tight shrink-0">
+        <Link
+          href="/"
+          className="text-brand-red font-bold text-lg sm:text-xl md:text-2xl
+          tracking-tight shrink min-w-0 max-w-[42vw] sm:max-w-[min(12rem,52vw)] md:max-w-none truncate"
+        >
           {siteName}
         </Link>
 
-        <ul className="hidden md:flex items-center gap-6">
+        <ul className="hidden md:flex items-center gap-6 shrink-0">
           {navLinks.map(link => (
             <li key={link.key}>
               <Link
@@ -95,24 +98,35 @@ export default function Navbar () {
           </li>
         </ul>
 
-        <div className="flex items-center gap-3 ml-auto">
+        <div className="flex items-center gap-1 sm:gap-2 md:gap-3 shrink-0">
 
           <button
             type="button"
-            onClick={() => setSearchOpen(!searchOpen)}
-            className="p-2 text-zinc-400 hover:text-white transition-colors"
+            onClick={() => { setMenuOpen(v => !v); setSearchOpen(false) }}
+            className="md:hidden p-2 text-zinc-300 hover:text-white rounded-lg border border-zinc-700/80
+              bg-zinc-900/80 shrink-0"
+            aria-expanded={menuOpen}
+            aria-label={t('menu')}
+          >
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => { setSearchOpen(v => !v); setMenuOpen(false) }}
+            className="p-2 text-zinc-400 hover:text-white transition-colors shrink-0"
             aria-expanded={searchOpen}
             aria-label={t('search')}
           >
             <Search size={18} />
           </button>
 
-          <div className="flex items-center gap-1 border border-zinc-700
-            rounded-full px-2 py-1 text-xs">
+          <div className="flex items-center gap-0.5 sm:gap-1 border border-zinc-700
+            rounded-full px-1 sm:px-2 py-1 text-[10px] sm:text-xs shrink-0">
             <button
               type="button"
               onClick={() => switchLocale('en')}
-              className={`px-2 py-0.5 rounded-full transition-colors
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full transition-colors
                 ${locale === 'en'
                   ? 'bg-white text-black font-medium'
                   : 'text-zinc-400 hover:text-white'}`}
@@ -122,7 +136,7 @@ export default function Navbar () {
             <button
               type="button"
               onClick={() => switchLocale('km')}
-              className={`px-2 py-0.5 rounded-full transition-colors
+              className={`px-1.5 sm:px-2 py-0.5 rounded-full transition-colors
                 ${locale === 'km'
                   ? 'bg-white text-black font-medium'
                   : 'text-zinc-400 hover:text-white'}`}
@@ -138,20 +152,12 @@ export default function Navbar () {
             {t('watchlist')}
           </Link>
 
-          <button type="button" className="hidden md:block p-2 text-zinc-400 hover:text-white">
+          <button type="button" className="hidden md:block p-2 text-zinc-400 hover:text-white shrink-0">
             <Bell size={18} />
           </button>
 
-          <button type="button" className="p-1.5 bg-brand-red rounded-full text-white">
+          <button type="button" className="hidden sm:flex p-1.5 bg-brand-red rounded-full text-white shrink-0">
             <User size={16} />
-          </button>
-
-          <button
-            type="button"
-            className="md:hidden p-2 text-zinc-400"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
       </div>
