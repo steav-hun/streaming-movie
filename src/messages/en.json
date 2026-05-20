@@ -5,21 +5,60 @@
     "tvShows": "TV Shows",
     "search": "Search",
     "watchlist": "Watchlist",
-    "login": "Login"
+    "login": "Login",
+    "browse": "Browse"
   },
   "home": {
     "trending": "Trending Now",
     "popular": "Popular Movies",
     "newRelease": "New Releases",
     "watchNow": "Watch Now",
-    "addWatchlist": "Add to Watchlist"
+    "addWatchlist": "Add to Watchlist",
+    "savedWatchlist": "In watchlist"
   },
   "search": {
     "placeholder": "Search movies, TV shows...",
-    "noResult": "No results found"
+    "noResult": "No results found",
+    "resultsTitle": "Search",
+    "enterQuery": "Enter a search term in the header.",
+    "resultsFor": "Results for “{query}”",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
   },
   "footer": {
     "rights": "All rights reserved"
+  },
+  "tv": {
+    "popular": "Popular TV Shows",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
+  },
+  "moviesCatalog": {
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}"
+  },
+  "browse": {
+    "title": "Browse by genre",
+    "allGenres": "All genres",
+    "apply": "Apply"
+  },
+  "detail": {
+    "similar": "Similar titles",
+    "recommendations": "Recommended",
+    "cast": "Cast",
+    "whereToWatch": "Where to watch",
+    "streaming": "Streaming",
+    "rent": "Rent",
+    "buy": "Buy",
+    "noProviders": "No provider data for your region in TMDB."
+  },
+  "watchlistPage": {
+    "title": "Your watchlist",
+    "empty": "Save movies and shows from their pages — they appear here.",
+    "remove": "Remove"
   },
   "movie": {
     "trailerHeading": "Watch trailer",

@@ -5,21 +5,60 @@
     "tvShows": "កម្មវិធីទូរទស្សន៍",
     "search": "ស្វែងរក",
     "watchlist": "បញ្ជីមើល",
-    "login": "ចូលគណនី"
+    "login": "ចូលគណនី",
+    "browse": "រុករក"
   },
   "home": {
     "trending": "កំពុងពេញនិយម",
     "popular": "ភាពយន្តល្បីល្បាញ",
     "newRelease": "ចេញថ្មី",
     "watchNow": "មើលឥឡូវ",
-    "addWatchlist": "បន្ថែមទៅបញ្ជី"
+    "addWatchlist": "បន្ថែមទៅបញ្ជី",
+    "savedWatchlist": "ក្នុងបញ្ជី"
   },
   "search": {
     "placeholder": "ស្វែងរកភាពយន្ត...",
-    "noResult": "រកមិនឃើញ"
+    "noResult": "រកមិនឃើញ",
+    "resultsTitle": "ស្វែងរក",
+    "enterQuery": "បញ្ចូលពាក្យស្វែងរកនៅក្នុងរបារខាងលើ។",
+    "resultsFor": "លទ្ធផលសម្រាប់ «{query}»",
+    "prev": "មុន",
+    "next": "បន្ទាប់",
+    "pageOf": "ទំព័រ {page} នៃ {total}"
   },
   "footer": {
     "rights": "រក្សាសិទ្ធិគ្រប់យ៉ាង"
+  },
+  "tv": {
+    "popular": "កម្មវិធីទូរទស្សន៍ពេញនិយម",
+    "prev": "មុន",
+    "next": "បន្ទាប់",
+    "pageOf": "ទំព័រ {page} នៃ {total}"
+  },
+  "moviesCatalog": {
+    "prev": "មុន",
+    "next": "បន្ទាប់",
+    "pageOf": "ទំព័រ {page} នៃ {total}"
+  },
+  "browse": {
+    "title": "រុករកតាមប្រភេទ",
+    "allGenres": "ប្រភេទទាំងអស់",
+    "apply": "អនុវត្ត"
+  },
+  "detail": {
+    "similar": "ភាពយន្តស្រដៀងគ្នា",
+    "recommendations": "ណែនាំ",
+    "cast": "តារាសម្ដែង",
+    "whereToWatch": "មើលនៅឯណា",
+    "streaming": "Streaming",
+    "rent": "ជួល",
+    "buy": "ទិញ",
+    "noProviders": "គ្មានទិន្នន័យអ្នកផ្តល់សេវាក្នុងតំបន់ នៅ TMDB។"
+  },
+  "watchlistPage": {
+    "title": "បញ្ជីមើលរបស់អ្នក",
+    "empty": "រក្សាទុកភាពយន្តនិងកម្មវិធីពីទំព័រ — វានឹងបង្ហាញនៅទីនេះ។",
+    "remove": "លុប"
   },
   "movie": {
     "trailerHeading": "មើលឃ្លីបផ្សព្វផ្សាយ",

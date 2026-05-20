@@ -4,11 +4,14 @@ import { getTranslations } from 'next-intl/server'
 export const revalidate = 3600
 import MovieCard from '@/components/movie/MovieCard'
 import BannerAd from '@/components/ads/BannerAd'
+import { HomeHeroActions } from '@/components/home/HomeHeroActions'
 import { fetchTrendingMovies, fetchNowPlayingMovies } from '@/actions/movies.actions'
+import { getSiteName } from '@/lib/site-meta'
 
 export default async function HomePage ({ params }) {
   const { locale } = await params
   const t = await getTranslations('home')
+  const siteName = getSiteName()
 
   const [trendingRes, newRes] = await Promise.all([
     fetchTrendingMovies(locale),
@@ -45,22 +48,12 @@ export default async function HomePage ({ params }) {
             {t('trending')}
           </span>
           <h1 className="text-5xl font-bold leading-tight mb-4">
-            {featured?.title ?? 'MovieStream'}
+            {featured?.title ?? siteName}
           </h1>
           <p className="text-zinc-400 mb-6 leading-relaxed line-clamp-4">
             {featured?.overview ?? t('popular')}
           </p>
-          <div className="flex gap-3">
-            <button type="button" className="flex items-center gap-2 bg-white text-black
-              font-semibold px-6 py-3 rounded-lg hover:bg-zinc-200 transition">
-              ▶ {t('watchNow')}
-            </button>
-            <button type="button" className="flex items-center gap-2 bg-zinc-700/60
-              font-medium px-6 py-3 rounded-lg hover:bg-zinc-700 transition
-              border border-zinc-600">
-              + {t('addWatchlist')}
-            </button>
-          </div>
+          <HomeHeroActions featured={featured} />
         </div>
       </section>
 

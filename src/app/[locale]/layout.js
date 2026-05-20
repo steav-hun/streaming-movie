@@ -6,6 +6,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { HtmlLang } from '@/components/layout/HtmlLang'
 import { getSiteUrl } from '@/lib/site-url'
+import { getSiteName } from '@/lib/site-meta'
 
 const inter = Inter({ subsets: ['latin'] })
 const battambang = Battambang({
@@ -16,8 +17,8 @@ const battambang = Battambang({
 
 export async function generateMetadata ({ params }) {
   const { locale } = await params
-  const siteName = 'MovieStream'
-  const description = 'Watch movies online'
+  const siteName = getSiteName()
+  const description = 'Watch trailers and discover movies & TV — browse by genre, build a watchlist, and see where to stream.'
   const baseUrl = new URL(getSiteUrl())
 
   return {

@@ -1,23 +1,37 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
 import { Search, Menu, X, Bell, User } from 'lucide-react'
+import { getSiteName } from '@/lib/site-meta'
 
 const navLinks = [
   { key: 'home', href: '/', isActive: p => p === '/' },
-  { key: 'movies', href: '/movies', isActive: p => p === '/movies' || p.startsWith('/movies/') },
+  {
+    key: 'movies',
+    href: '/movies',
+    isActive: p => p === '/movies' || p.startsWith('/movies/')
+  },
   { key: 'tvShows', href: '/tv-shows', isActive: p => p.startsWith('/tv-shows') }
 ]
 
 export default function Navbar () {
+  const siteName = getSiteName()
   const t = useTranslations('nav')
+  const tSearch = useTranslations('search')
   const pathname = usePathname()
   const locale = useLocale()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const searchInputRef = useRef(null)
+
+  useEffect(() => {
+    if (searchOpen) {
+      searchInputRef.current?.focus()
+    }
+  }, [searchOpen])
 
   function switchLocale (newLocale) {
     if (newLocale === locale) return
@@ -25,8 +39,16 @@ export default function Navbar () {
     const suffix = typeof window !== 'undefined'
       ? `${window.location.search}${window.location.hash}`
       : ''
-    // next-intl wraps Next router: client navigation + locale cookie (no full page reload)
     router.replace(`${path}${suffix}`, { locale: newLocale })
+  }
+
+  function submitSearch (e) {
+    e.preventDefault()
+    const raw = searchInputRef.current?.value?.trim() ?? ''
+    if (!raw) return
+    setSearchOpen(false)
+    setMenuOpen(false)
+    router.push(`/search?q=${encodeURIComponent(raw)}`)
   }
 
   return (
@@ -45,7 +67,7 @@ export default function Navbar () {
 
         <Link href="/" className="text-brand-red font-bold text-2xl
           tracking-tight shrink-0">
-          MerlMovie24
+          {siteName}
         </Link>
 
         <ul className="hidden md:flex items-center gap-6">
@@ -60,6 +82,17 @@ export default function Navbar () {
               </Link>
             </li>
           ))}
+          <li>
+            <Link
+              href="/movies/browse"
+              className={`text-sm transition-colors hover:text-white
+                ${pathname?.startsWith('/movies/browse')
+                  ? 'text-white font-medium'
+                  : 'text-zinc-400'}`}
+            >
+              {t('browse')}
+            </Link>
+          </li>
         </ul>
 
         <div className="flex items-center gap-3 ml-auto">
@@ -68,6 +101,8 @@ export default function Navbar () {
             type="button"
             onClick={() => setSearchOpen(!searchOpen)}
             className="p-2 text-zinc-400 hover:text-white transition-colors"
+            aria-expanded={searchOpen}
+            aria-label={t('search')}
           >
             <Search size={18} />
           </button>
@@ -96,6 +131,13 @@ export default function Navbar () {
             </button>
           </div>
 
+          <Link
+            href="/watchlist"
+            className="hidden md:inline text-sm text-zinc-400 hover:text-white"
+          >
+            {t('watchlist')}
+          </Link>
+
           <button type="button" className="hidden md:block p-2 text-zinc-400 hover:text-white">
             <Bell size={18} />
           </button>
@@ -116,17 +158,29 @@ export default function Navbar () {
 
       {searchOpen && (
         <div className="border-t border-zinc-800 px-4 py-3 bg-black/95">
-          <div className="max-w-xl mx-auto flex items-center gap-2
-            bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2">
-            <Search size={16} className="text-zinc-500" />
+          <form
+            onSubmit={submitSearch}
+            className="max-w-xl mx-auto flex items-center gap-2
+              bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2"
+          >
+            <Search size={16} className="text-zinc-500 shrink-0" />
             <input
-              autoFocus
-              type="text"
-              placeholder="Search movies, TV shows..."
+              ref={searchInputRef}
+              type="search"
+              name="q"
+              placeholder={tSearch('placeholder')}
               className="flex-1 bg-transparent text-sm text-white
                 placeholder:text-zinc-500 outline-none"
+              autoComplete="off"
             />
-          </div>
+            <button
+              type="submit"
+              className="text-xs font-medium text-white bg-zinc-700 px-3 py-1 rounded-md
+                hover:bg-zinc-600"
+            >
+              {t('search')}
+            </button>
+          </form>
         </div>
       )}
 
@@ -144,6 +198,24 @@ export default function Navbar () {
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                href="/movies/browse"
+                onClick={() => setMenuOpen(false)}
+                className="block text-sm text-zinc-300 hover:text-white py-1"
+              >
+                {t('browse')}
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/watchlist"
+                onClick={() => setMenuOpen(false)}
+                className="block text-sm text-zinc-300 hover:text-white py-1"
+              >
+                {t('watchlist')}
+              </Link>
+            </li>
           </ul>
         </div>
       )}

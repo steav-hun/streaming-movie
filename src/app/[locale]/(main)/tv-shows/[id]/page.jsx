@@ -3,81 +3,90 @@ import { Link } from '@/i18n/navigation'
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import {
-  fetchMovieById,
-  fetchSimilarMovies,
-  fetchRecommendedMovies,
-  fetchMovieWatchProviders
-} from '@/actions/movies.actions'
+  fetchTvById,
+  fetchSimilarTv,
+  fetchRecommendedTv,
+  fetchTvWatchProviders
+} from '@/actions/tv.actions'
 import { MovieTrailerPlayer } from '@/components/movie/MovieTrailerPlayer'
 import { MediaRow } from '@/components/media/MediaRow'
 import { WatchProviders } from '@/components/media/WatchProviders'
-import MovieCard from '@/components/movie/MovieCard'
+import { TVCard } from '@/components/tv/TVCard'
 import { DetailWatchlistRow } from '@/components/watchlist/DetailWatchlistRow'
 import { getSiteName, getWatchRegion } from '@/lib/site-meta'
 
 export const revalidate = 3600
 
+function episodeRuntimeMins (show) {
+  const arr = show.episode_run_time
+  if (Array.isArray(arr) && arr.length > 0 && typeof arr[0] === 'number') {
+    return arr[0]
+  }
+  return null
+}
+
 export async function generateMetadata ({ params }) {
   const { locale, id } = await params
   const siteName = getSiteName()
-  const res = await fetchMovieById(id, locale)
-  const movie = res.movie
-  if (!movie) {
+  const res = await fetchTvById(id, locale)
+  const show = res.show
+  if (!show) {
     return { title: res.ok ? 'Not found' : siteName }
   }
-  const ogImage = movie.backdrop_path
-    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
-    : movie.poster_path
-      ? `https://image.tmdb.org/t/p/w780${movie.poster_path}`
+  const ogImage = show.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}`
+    : show.poster_path
+      ? `https://image.tmdb.org/t/p/w780${show.poster_path}`
       : undefined
   return {
-    title: `${movie.title} — ${siteName}`,
-    description: movie.overview,
+    title: `${show.name} — ${siteName}`,
+    description: show.overview,
     openGraph: ogImage
-      ? { images: [{ url: ogImage, alt: movie.title }] }
+      ? { images: [{ url: ogImage, alt: show.name }] }
       : undefined
   }
 }
 
-export default async function MovieDetailPage ({ params }) {
+export default async function TvDetailPage ({ params }) {
   const { locale, id } = await params
 
-  const movieRes = await fetchMovieById(id, locale)
+  const showRes = await fetchTvById(id, locale)
 
-  if (!movieRes.ok) {
+  if (!showRes.ok) {
     return (
       <div className="pt-28 min-h-screen max-w-4xl mx-auto px-4 pb-16">
-        <p className="text-amber-400">{movieRes.error}</p>
+        <p className="text-amber-400">{showRes.error}</p>
       </div>
     )
   }
 
-  const movie = movieRes.movie
-  if (!movie) {
+  const show = showRes.show
+  if (!show) {
     notFound()
   }
 
-  const videoUrl = movieRes.videoUrl
+  const videoUrl = showRes.videoUrl
 
   const [similarRes, recRes, provRes, t, tNav, tDetail] = await Promise.all([
-    fetchSimilarMovies(id, locale),
-    fetchRecommendedMovies(id, locale),
-    fetchMovieWatchProviders(id),
+    fetchSimilarTv(id, locale),
+    fetchRecommendedTv(id, locale),
+    fetchTvWatchProviders(id),
     getTranslations('home'),
     getTranslations('nav'),
     getTranslations('detail')
   ])
 
-  const similar = similarRes.ok ? similarRes.movies.slice(0, 12) : []
-  const recommended = recRes.ok ? recRes.movies.slice(0, 12) : []
+  const similar = similarRes.ok ? similarRes.shows.slice(0, 12) : []
+  const recommended = recRes.ok ? recRes.shows.slice(0, 12) : []
   const providerData = provRes.ok ? provRes.data : null
   const region = getWatchRegion()
 
-  const backdrop = movie.backdrop_path
-    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
+  const backdrop = show.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${show.backdrop_path}`
     : null
 
-  const cast = (movie.credits?.cast ?? []).slice(0, 16)
+  const runMins = episodeRuntimeMins(show)
+  const cast = (show.aggregate_credits?.cast ?? []).slice(0, 16)
 
   return (
     <div className="min-h-screen pb-16">
@@ -101,18 +110,23 @@ export default async function MovieDetailPage ({ params }) {
 
       <div className="max-w-4xl mx-auto px-4 pt-6 -mt-24 relative z-10">
         <Link
-          href="/movies"
+          href="/tv-shows"
           className="text-sm text-zinc-400 hover:text-white mb-6 inline-block"
         >
-          ← {tNav('movies')}
+          ← {tNav('tvShows')}
         </Link>
-        <h1 className="text-3xl font-bold mb-4">{movie.title}</h1>
+        <h1 className="text-3xl font-bold mb-4">{show.name}</h1>
         <p className="text-zinc-400 text-sm mb-2">
-          {movie.release_date?.slice(0, 4)} · ★{' '}
-          {Number(movie.vote_average).toFixed(1)}
-          {movie.runtime ? ` · ${movie.runtime} min` : ''}
+          {show.first_air_date?.slice(0, 4)}
+          {show.last_air_date ? ` – ${show.last_air_date.slice(0, 4)}` : ''}
+          {' · ★ '}
+          {Number(show.vote_average).toFixed(1)}
+          {typeof show.number_of_seasons === 'number'
+            ? ` · ${show.number_of_seasons} season${show.number_of_seasons !== 1 ? 's' : ''}`
+            : ''}
+          {runMins ? ` · ~${runMins} min/ep` : ''}
         </p>
-        <p className="text-zinc-300 leading-relaxed mb-8">{movie.overview}</p>
+        <p className="text-zinc-300 leading-relaxed mb-8">{show.overview}</p>
         <div className="flex flex-wrap gap-3">
           <a
             href="#watch"
@@ -121,10 +135,10 @@ export default async function MovieDetailPage ({ params }) {
             ▶ {t('watchNow')}
           </a>
           <DetailWatchlistRow
-            id={movie.id}
-            mediaType="movie"
-            title={movie.title}
-            posterPath={movie.poster_path ?? null}
+            id={show.id}
+            mediaType="tv"
+            title={show.name}
+            posterPath={show.poster_path ?? null}
           />
         </div>
 
@@ -138,7 +152,7 @@ export default async function MovieDetailPage ({ params }) {
                   : null
                 return (
                   <div
-                    key={person.id}
+                    key={`${person.id}-${person.roles?.[0]?.character ?? ''}`}
                     className="shrink-0 w-24 text-center"
                   >
                     <div className="relative aspect-3/4 rounded-lg overflow-hidden bg-zinc-800 mb-2">
@@ -147,7 +161,9 @@ export default async function MovieDetailPage ({ params }) {
                       ) : null}
                     </div>
                     <p className="text-xs font-medium text-white line-clamp-2">{person.name}</p>
-                    <p className="text-[10px] text-zinc-500 line-clamp-2 mt-0.5">{person.character}</p>
+                    <p className="text-[10px] text-zinc-500 line-clamp-2 mt-0.5">
+                      {person.roles?.[0]?.character ?? person.character ?? ''}
+                    </p>
                   </div>
                 )
               })}
@@ -163,9 +179,9 @@ export default async function MovieDetailPage ({ params }) {
 
         {similar.length > 0 && (
           <MediaRow title={tDetail('similar')}>
-            {similar.map(m => (
-              <div key={m.id} className="shrink-0 w-36 snap-start">
-                <MovieCard movie={m} />
+            {similar.map(s => (
+              <div key={s.id} className="shrink-0 w-36 snap-start">
+                <TVCard show={s} />
               </div>
             ))}
           </MediaRow>
@@ -173,9 +189,9 @@ export default async function MovieDetailPage ({ params }) {
 
         {recommended.length > 0 && (
           <MediaRow title={tDetail('recommendations')}>
-            {recommended.map(m => (
-              <div key={m.id} className="shrink-0 w-36 snap-start">
-                <MovieCard movie={m} />
+            {recommended.map(s => (
+              <div key={s.id} className="shrink-0 w-36 snap-start">
+                <TVCard show={s} />
               </div>
             ))}
           </MediaRow>

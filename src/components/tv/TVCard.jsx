@@ -1,29 +1,30 @@
 'use client'
+
 import Image from 'next/image'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { Play, Plus, Star } from 'lucide-react'
 import { useWatchlistStore } from '@/stores/watchlist-store'
 
-export default function MovieCard ({ movie }) {
+export function TVCard ({ show }) {
   const t = useTranslations('home')
   const toggle = useWatchlistStore(s => s.toggle)
-  const has = useWatchlistStore(s => s.has(movie.id, 'movie'))
+  const has = useWatchlistStore(s => s.has(show.id, 'tv'))
 
-  const imageUrl = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w342${movie.poster_path}`
+  const imageUrl = show.poster_path
+    ? `https://image.tmdb.org/t/p/w342${show.poster_path}`
     : null
 
-  const rating = Number(movie.vote_average)
+  const rating = Number(show.vote_average)
   const ratingLabel = Number.isFinite(rating) ? rating.toFixed(1) : '—'
 
   return (
-    <Link href={`/movies/${movie.id}`} className="group block">
+    <Link href={`/tv-shows/${show.id}`} className="group block">
       <div className="relative aspect-2/3 rounded-lg overflow-hidden bg-zinc-900">
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={movie.title}
+            alt={show.name}
             fill
             className="object-cover transition-transform duration-300
               group-hover:scale-105"
@@ -62,10 +63,10 @@ export default function MovieCard ({ movie }) {
                 e.preventDefault()
                 e.stopPropagation()
                 toggle({
-                  id: movie.id,
-                  mediaType: 'movie',
-                  title: movie.title,
-                  posterPath: movie.poster_path ?? null
+                  id: show.id,
+                  mediaType: 'tv',
+                  title: show.name,
+                  posterPath: show.poster_path ?? null
                 })
               }}
               className={`p-1.5 rounded-full border border-zinc-600 transition-colors
@@ -81,10 +82,10 @@ export default function MovieCard ({ movie }) {
 
       <p className="mt-2 text-sm font-medium text-zinc-200 line-clamp-1
         group-hover:text-white transition-colors">
-        {movie.title}
+        {show.name}
       </p>
       <p className="text-xs text-zinc-500 mt-0.5">
-        {movie.release_date?.slice(0, 4)}
+        {show.first_air_date?.slice(0, 4)}
       </p>
     </Link>
   )

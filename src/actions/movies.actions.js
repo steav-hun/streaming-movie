@@ -7,7 +7,13 @@ import {
   getMovieById,
   getMovieVideos,
   pickPlayableVideoUrl,
-  localeToTmdbLanguage
+  localeToTmdbLanguage,
+  searchMulti,
+  getSimilarMovies,
+  getRecommendedMovies,
+  getMovieWatchProviders,
+  getMovieGenresList,
+  discoverMovies
 } from '@/services/tmdb.service'
 
 const MISSING_TOKEN = 'Missing TMDB_ACCESS_TOKEN in environment variables.'
@@ -90,6 +96,104 @@ export async function fetchMovieById (id, locale) {
       ok: false,
       movie: null,
       videoUrl: null,
+      error: err instanceof Error ? err.message : 'Unknown error'
+    }
+  }
+}
+
+export async function fetchSearchMulti (locale, query, page = 1) {
+  if (!process.env.TMDB_ACCESS_TOKEN) {
+    return { ok: false, results: [], totalPages: 0, error: MISSING_TOKEN }
+  }
+  const language = localeToTmdbLanguage(locale)
+  try {
+    const { results, totalPages } = await searchMulti(query, language, page)
+    return { ok: true, results, totalPages, error: null }
+  } catch (err) {
+    console.error('[fetchSearchMulti]', err)
+    return {
+      ok: false,
+      results: [],
+      totalPages: 0,
+      error: err instanceof Error ? err.message : 'Unknown error'
+    }
+  }
+}
+
+export async function fetchSimilarMovies (id, locale) {
+  if (!process.env.TMDB_ACCESS_TOKEN) {
+    return { ok: false, movies: [], error: MISSING_TOKEN }
+  }
+  const language = localeToTmdbLanguage(locale)
+  try {
+    const movies = await getSimilarMovies(id, language)
+    return { ok: true, movies, error: null }
+  } catch (err) {
+    console.error('[fetchSimilarMovies]', err)
+    return { ok: false, movies: [], error: err instanceof Error ? err.message : 'Unknown error' }
+  }
+}
+
+export async function fetchRecommendedMovies (id, locale) {
+  if (!process.env.TMDB_ACCESS_TOKEN) {
+    return { ok: false, movies: [], error: MISSING_TOKEN }
+  }
+  const language = localeToTmdbLanguage(locale)
+  try {
+    const movies = await getRecommendedMovies(id, language)
+    return { ok: true, movies, error: null }
+  } catch (err) {
+    console.error('[fetchRecommendedMovies]', err)
+    return { ok: false, movies: [], error: err instanceof Error ? err.message : 'Unknown error' }
+  }
+}
+
+export async function fetchMovieWatchProviders (id) {
+  if (!process.env.TMDB_ACCESS_TOKEN) {
+    return { ok: false, data: null, error: MISSING_TOKEN }
+  }
+  try {
+    const data = await getMovieWatchProviders(id)
+    return { ok: true, data, error: null }
+  } catch (err) {
+    console.error('[fetchMovieWatchProviders]', err)
+    return { ok: false, data: null, error: err instanceof Error ? err.message : 'Unknown error' }
+  }
+}
+
+export async function fetchMovieGenres (locale) {
+  if (!process.env.TMDB_ACCESS_TOKEN) {
+    return { ok: false, genres: [], error: MISSING_TOKEN }
+  }
+  const language = localeToTmdbLanguage(locale)
+  try {
+    const genres = await getMovieGenresList(language)
+    return { ok: true, genres, error: null }
+  } catch (err) {
+    console.error('[fetchMovieGenres]', err)
+    return { ok: false, genres: [], error: err instanceof Error ? err.message : 'Unknown error' }
+  }
+}
+
+export async function fetchDiscoverMovies (locale, page = 1, withGenres = '') {
+  if (!process.env.TMDB_ACCESS_TOKEN) {
+    return { ok: false, movies: [], totalPages: 0, error: MISSING_TOKEN }
+  }
+  const language = localeToTmdbLanguage(locale)
+  try {
+    const { results, totalPages } = await discoverMovies({
+      language,
+      page,
+      withGenres: withGenres || undefined,
+      sortBy: 'popularity.desc'
+    })
+    return { ok: true, movies: results, totalPages, error: null }
+  } catch (err) {
+    console.error('[fetchDiscoverMovies]', err)
+    return {
+      ok: false,
+      movies: [],
+      totalPages: 0,
       error: err instanceof Error ? err.message : 'Unknown error'
     }
   }
