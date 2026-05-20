@@ -8,7 +8,6 @@ export const useWatchlistStore = create(
 
       toggle (item) {
         const { id, mediaType, title, posterPath } = item
-        const key = itemKey(id, mediaType)
         const exists = get().items.some(
           i => i.id === id && i.mediaType === mediaType
         )
